@@ -4,25 +4,19 @@ Ext.define("TDK.insentif.Layoutins", {
   alias: "widget.Layoutins",
   reference: "Layoutins",
   modal: true,
-  title: "Module Pendapatan: Gaji Pokok", 
+  title: "Module Pendapatan: Gaji Pokok",
   closeAction: "destroy",
   centered: true,
   maximizable: true,
-  width: 700,  
+  width: 700,
   height: 500,
 
-  requires: [],
+  requires: ["TDK.insentif.pen"],
 
   bodyStyle: "background:#FFFFFF;background-color:#FFFFFF",
   layout: "fit",
   border: false,
   frame: false,
-
-  items: [
-    {
-      xtype: 'form'
-    }
-  ],
 
   fieldDefaults: {
     labelAlign: "left",
@@ -46,11 +40,11 @@ Ext.define("TDK.insentif.Layoutins", {
           boxShadow: "none",
         },
       },
-      { title: "by Department2", xtype: "Gridsum", groupField: "DEPARTMENT"},
-      { title: "by Seksi" , xtype: "Gridsum", groupField: "SEKSI"},
-      { title: "by Subseksi" , xtype: "Gridsum", groupField: "SUBSEKSI"},
-      { title: "by Jabatan", xtype: "Gridsum", groupField: "NAMA_JABATAN"},
-      { title: "by Golongan", xtype: "Gridsum", groupField: "NAMA_GOLONGAN"},
+      { title: "by Department2", xtype: "Gridsum", groupField: "DEPARTMENT" },
+      { title: "by Seksi", xtype: "Gridsum", groupField: "SEKSI" },
+      { title: "by Subseksi", xtype: "Gridsum", groupField: "SUBSEKSI" },
+      { title: "by Jabatan", xtype: "Gridsum", groupField: "NAMA_JABATAN" },
+      { title: "by Golongan", xtype: "Gridsum", groupField: "NAMA_GOLONGAN" },
       { title: "by Area", xtype: "Gridsum", groupField: "AREA" },
       { title: "by Status Kontrak", xtype: "Gridsum", groupField: "STATUS_KONTRAK" },
       {
@@ -65,7 +59,7 @@ Ext.define("TDK.insentif.Layoutins", {
           boxShadow: "none",
         },
       },
-      { title: "Upload Manual" },
+      { title: "Upload Manual",},
     ],
   },
 
@@ -170,14 +164,6 @@ Ext.define("TDK.insentif.Layoutins", {
           pid: "btrefresh",
           icon: vconfig.getstyle + "icon/update.ico",
           tooltip: "Refresh Data",
-          handler: function (cmp) {
-            try {
-              var Layoutins = cmp.up("Layoutins");
-              Layoutins.handler_refresh_click(cmp);
-            } catch (ex) {
-              COMP.TipToast.msgbox("Error", ex.message, { cls: "danger", delay: 2000 });
-            }
-          },
         },
         "-",
         {
@@ -186,14 +172,6 @@ Ext.define("TDK.insentif.Layoutins", {
           pid: "btsinkronisasi",
           icon: vconfig.getstyle + "icon/certificate.ico",
           tooltip: "Sinkronisasi",
-          handler: function (cmp) {
-            try {
-              var Layoutins = cmp.up("Layoutins");
-              Layoutins.handler_sinkronisasi_click(cmp);
-            } catch (ex) {
-              COMP.TipToast.msgbox("Error", ex.message, { cls: "danger", delay: 2000 });
-            }
-          },
         },
         "-",
         {
@@ -202,14 +180,6 @@ Ext.define("TDK.insentif.Layoutins", {
           pid: "btposting",
           icon: vconfig.getstyle + "icon/lock.png",
           tooltip: "Posting",
-          handler: function (cmp) {
-            try {
-              var Layoutins = cmp.up("Layoutins");
-              Layoutins.handler_posting_click(cmp);
-            } catch (ex) {
-              COMP.TipToast.msgbox("Error", ex.message, { cls: "danger", delay: 2000 });
-            }
-          },
         },
         "->",
       ],
@@ -225,145 +195,5 @@ Ext.define("TDK.insentif.Layoutins", {
         COMP.TipToast.msgbox("Error", ex.message, { cls: "danger", delay: 2000 });
       }
     },
-  },
-
-  // handler area
-  //============================================================================================================
-  handler_refresh_click: function (cmp) {
-    try {
-      var thisPage = cmp.up("Layoutins");
-      var tabPanel = thisPage.down("tabpanel");
-      tabPanel.setActiveTab(0);
-
-      var GRIDgaji_pokok = thisPage.query("grid[pid=GRIDgaji_pokok]")[0];
-      if (GRIDgaji_pokok) {
-        GRIDgaji_pokok.getStore().load();
-      }
-    } catch (ex) {
-      COMP.TipToast.msgbox("Error", ex.message, { cls: "danger", delay: 2000 });
-    }
-  },
-
-  handler_posting_click: function (cmp) {
-    try {
-      var Layoutins = cmp.up("Layoutins");
-      Ext.MessageBox.confirm("Konfirmasi", "Konfirmasi Posting data", function (button) {
-        if (button === "yes") {
-          var params = Ext.encode({
-            method: "process_data",
-            vmodule: "posting",
-          });
-
-          var hasil = COMP.run.getservice(vconfig.service_api + "formula_insentif/formula_insentif", params);
-          hasil.then(function (content) {
-            var val = Ext.decode(content, true);
-            COMP.TipToast.msgbox("Success", val.message, { cls: "success", delay: 2000 });
-            Layoutins.handler_refresh_click(cmp);
-          }, this);
-        }
-      });
-    } catch (ex) {
-      COMP.TipToast.msgbox("Error", ex.message, { cls: "danger", delay: 2000 });
-    }
-  },
-
-  handler_sinkronisasi_click: function (cmp) {
-    try {
-      var Layoutins = cmp.up("Layoutins");
-      Ext.MessageBox.confirm("Konfirmasi", "Konfirmasi Sinkronisasi data", function (button) {
-        if (button === "yes") {
-          var params = Ext.encode({
-            method: "process_data",
-            vmodule: "sinkronisasi",
-          });
-
-          var hasil = COMP.run.getservice(vconfig.service_api + "formula_insentif/formula_insentif", params);
-          hasil.then(function (content) {
-            var val = Ext.decode(content, true);
-            COMP.TipToast.msgbox("Success", val.message, { cls: "success", delay: 2000 });
-            Layoutins.handler_refresh_click(cmp);
-          }, this);
-        }
-      });
-    } catch (ex) {
-      COMP.TipToast.msgbox("Error", ex.message, { cls: "danger", delay: 2000 });
-    }
-  },
-
-  handler_edit_gaji_pokok: function (xgrid, rowIndex, colIndex, e, a, rec) {
-    try {
-      var vdata = rec.data;
-      var Layoutins = xgrid.up("Layoutins");
-
-      var FRMpen_insentif_edit = Ext.create("TDK.ga_pendapatan.pen_insentif.FRMpen_insentif_edit", {
-        nvdata: vdata,
-        Layoutins: Layoutins,
-      });
-
-      var mainpanel = Ext.ComponentQuery.query("mainpage")[0];
-      var popup = Ext.create("Ext.window.Window", {
-        modal: true,
-        title: "Edit Insentif Karyawan: " + vdata.NIK + " - " + vdata.NAMA,
-        closeAction: "destroy",
-        centered: true,
-        maximizable: true,
-        width: mainpanel.getWidth() * 0.9,
-        height: mainpanel.getHeight() * 0.97,
-        bodyStyle: "background:#FFFFFF;background-color:#FFFFFF",
-        layout: "fit",
-        bodyBorder: false,
-        items: [FRMpen_insentif_edit],
-      });
-
-      return popup.show();
-    } catch (ex) {
-      COMP.TipToast.msgbox("Error", ex.message, { cls: "danger", delay: 2000 });
-    }
-  },
-  handler_validasi_proses_upload: function (cmp, GRIDupload) {
-    try {
-      let tmodule = "PENDAPATAN";
-      let tkategori = "INSENTIF";
-
-      if (COMP.GridData.getCount(GRIDupload) <= 0) {
-        COMP.TipToast.msgbox("Error", "Data Upload tidak ada", { cls: "danger", delay: 2000 });
-        return false;
-      }
-
-      if (COMP.GridData.getSql(GRIDupload, "PRDNO is null").length > 0) {
-        COMP.TipToast.msgbox("Error", "Periksa kolom Periode, tidak boleh kosong", { cls: "danger", delay: 2000 });
-        return false;
-      }
-
-      if (COMP.GridData.getSql(GRIDupload, "NIK is null").length > 0) {
-        COMP.TipToast.msgbox("Error", "Periksa kolom NIK, tidak boleh kosong", { cls: "danger", delay: 2000 });
-        return false;
-      }
-
-      if (COMP.GridData.getSql(GRIDupload, "NOMINAL is null or NOMINAL<=0").length > 0) {
-        COMP.TipToast.msgbox("Error", "Periksa kolom Insentif, tidak boleh kosong", { cls: "danger", delay: 2000 });
-        return false;
-      }
-
-      var vdata = COMP.GridData.getAllcustom(GRIDupload, ["PRDNO", "NIK", "NOMINAL"]);
-      Ext.create("TDK.a_global.popup.popup_verifikasi", {
-        titleText: "Verifikasi Upload data",
-        method: "upload_data_insentif",
-        url: vconfig.service_api + "formula_insentif/formula_insentif",
-        vdata: vdata,
-        showCancelVerify: false,
-        onSuccess: function (val, win) {
-          //GRIDdata_absensi.getStore().load();
-
-          Ext.defer(function () {
-            console.log("status success");
-          }, 500);
-
-          thisPage.close();
-        },
-      }).show();
-    } catch (ex) {
-      COMP.TipToast.msgbox("Error", ex.message, { cls: "danger", delay: 2000 });
-    }
   },
 });

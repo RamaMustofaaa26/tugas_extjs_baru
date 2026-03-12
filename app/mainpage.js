@@ -1,17 +1,18 @@
 Ext.define("TDK.mainpage", {
- extend: "Ext.panel.Panel",
- id: "mainpage",
- alias: "widget.mainpage",
- pid: "mainpage",
- config: {},
- requires: [
+  extend: "Ext.panel.Panel",
+  id: "mainpage",
+  alias: "widget.mainpage",
+  pid: "mainpage",
+  config: {},
+  requires: [
     "TDK.Cmainpage",
     "TDK.Gridins",
     // "TDK.Formins",
     "TDK.insentif.pen",
     "TDK.insentif.Layoutins",
-    "TDK.insentif.Gridsum"
-  
+    "TDK.insentif.Gridsum",
+    // "TDK.insentif.uploadm",
+
   ],
   constructor: function (config) {
     return this.callParent(arguments);
@@ -36,8 +37,8 @@ Ext.define("TDK.mainpage", {
           ]
         }
       ],
-   });
-   
-   this.callParent(arguments);
- }
+    });
+
+    this.callParent(arguments);
+  }
 });
